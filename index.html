@@ -568,15 +568,41 @@
             el.classList.add('active');
         }
 
-        function submitForm() {
+        async function submitForm() {
             const name = document.getElementById('f-name').value;
             const email = document.getElementById('f-email').value;
+            const subject = document.getElementById('f-subject').value;
             const msg = document.getElementById('f-msg').value;
             if (!name || !email || !msg) {
                 alert('お名前・メールアドレス・メッセージをご入力ください。');
                 return;
             }
-            document.getElementById('form-success').style.display = 'block';
+            const btn = document.querySelector('.submit-btn');
+            btn.disabled = true;
+            btn.textContent = '送信中...';
+            try {
+                const res = await fetch('https://api.web3forms.com/submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        access_key: '8638a1e4-8d54-49e8-bfb4-22cdfeeb8938',
+                        name, email, subject, message: msg
+                    })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    document.getElementById('form-success').style.display = 'block';
+                    document.querySelector('.contact-form').querySelectorAll('input, textarea, select').forEach(el => el.value = '');
+                } else {
+                    alert('送信に失敗しました。しばらく経ってから再度お試しください。');
+                    btn.disabled = false;
+                    btn.textContent = '送信する';
+                }
+            } catch {
+                alert('送信に失敗しました。通信状況をご確認ください。');
+                btn.disabled = false;
+                btn.textContent = '送信する';
+            }
         }
     </script>
 
