@@ -511,9 +511,9 @@
                 <textarea id="f-msg" rows="5" placeholder="お問い合わせ内容をご記入ください"></textarea>
             </div>
             <button class="submit-btn" onclick="submitForm()">送信する</button>
-            <div class="form-success" id="form-success">
-                ✓ お問い合わせを受け付けました。3営業日以内にご連絡いたします。
-            </div>
+        </div>
+        <div class="form-success" id="form-success" style="display:none;">
+            ✓ お問い合わせを受け付けました。3営業日以内にご連絡いたします。
         </div>
     </section>
 
@@ -591,8 +591,8 @@
                 });
                 const data = await res.json();
                 if (data.success) {
+                    document.querySelector('.contact-form').style.display = 'none';
                     document.getElementById('form-success').style.display = 'block';
-                    document.querySelector('.contact-form').querySelectorAll('input, textarea, select').forEach(el => el.value = '');
                 } else {
                     alert('送信に失敗しました。しばらく経ってから再度お試しください。');
                     btn.disabled = false;
